@@ -1,0 +1,29 @@
+{
+  "name": "auth-i",
+  "version": "1.0.0",
+  "description": "Trio project",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSPT1-TEAMS/auth-i.git"
+  },
+  "author": "Stephanie Brooks, Brandi, Lisa",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CSPT1-TEAMS/auth-i/issues"
+  },
+  "homepage": "https://github.com/CSPT1-TEAMS/auth-i#readme",
+  "devDependencies": {
+    "nodemon": "^1.17.3"
+  },
+  "dependencies": {
+    "bcrypt": "^2.0.1",
+    "express": "^4.16.3",
+    "helmet": "^3.12.1",
+    "mongodb": "^3.0.10",
+    "mongoose": "^5.1.5"
+  }
+}
