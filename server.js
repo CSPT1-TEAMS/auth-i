@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const routes = require('./User/route.js');
 
 const server = express()
 
@@ -14,6 +15,8 @@ mongoose.connect('mongodb://localhost/usersdb')
 
 server.use(express.json());
 server.use(helmet());
+
+server.use('/api', routes)
 
 server.get('/', (req, res) => {
   res.send('API is running....')
