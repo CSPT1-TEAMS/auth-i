@@ -1,5 +1,5 @@
 const express = require('express');
-
+const bcrypt = require('bcrypt');
 const User = require('./User');
 
 const router = express.Router();
@@ -28,16 +28,27 @@ router.post('/register', (req, res) => {
         })
 })
 
-const authenticate = (req, res) => {
-    const password = req.body;
-
-    if (password !== undefined) {
-        res.status(400).json({"message": "Please enter your password"})
-    } else {
-        console.log('You shall not pass');
+router.put('/login', (req, res) => {
+    if (!req.body.username || !req.body.password) {
+        res.sendStatus(400)
     }
-    
-}
+
+    console.log(req.session);
+    const { username, password } = req.body;
+    User.findOne({ username })
+        .then(user => {
+            user.comparePasswords(password, function (err, isMatch) {
+                if (isMatch) {
+                    res.status(200).json({ "message": "Logged in" })
+                } else {
+                    res.status(400).json({"error": "Incorrect password"})
+                }
+            })
+        })
+        .catch(err => {
+            res.status(500).json({ err })
+        })
+})
 
 
 module.exports = router;

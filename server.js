@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 const server = express();
 
@@ -13,6 +14,11 @@ db.connectTo('AuthDemo')
 
 server.use(helmet());
 server.use(express.json())
+
+server.use(session({
+    secret: 'lambdaschool',
+    name: 'cookieMonster'
+}))
 
 server.use('/api', userRoutes)
 
