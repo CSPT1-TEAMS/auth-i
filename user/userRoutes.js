@@ -17,7 +17,6 @@ router.get('/', (req, res) => {
 router.post('/register', (req, res) => {
     const newUser = req.body;
     const { username, password } = req.body;
-    console.log(req.body)
     const user = new User(newUser);
     user.save()
         .then(user => {
@@ -30,18 +29,18 @@ router.post('/register', (req, res) => {
 
 router.put('/login', (req, res) => {
     if (!req.body.username || !req.body.password) {
-        res.sendStatus(400)
+        res.status(400).json({"error": "Enter your username and password"})
     }
-
-    console.log(req.session);
+    // console.log(req.session)
     const { username, password } = req.body;
     User.findOne({ username })
         .then(user => {
-            user.comparePasswords(password, function (err, isMatch) {
+            req.session.isLoggedIn = true;
+            user.comparePasswords(password, isMatch => {
                 if (isMatch) {
                     res.status(200).json({ "message": "Logged in" })
                 } else {
-                    res.status(400).json({"error": "Incorrect password"})
+                    res.status(401).json({"error": "Incorrect password"})
                 }
             })
         })
@@ -49,6 +48,8 @@ router.put('/login', (req, res) => {
             res.status(500).json({ err })
         })
 })
+
+
 
 
 module.exports = router;
