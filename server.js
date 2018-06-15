@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
+const session = require('express-session');
+
 const routes = require('./User/route.js');
 
 const server = express()
@@ -15,6 +17,10 @@ mongoose.connect('mongodb://localhost/usersdb')
 
 server.use(express.json());
 server.use(helmet());
+server.use(session({
+  secret: 'Super Secret Awesome Unhackable Key!',
+  name: "lambdaApp",
+}))
 
 server.use('/api', routes)
 
