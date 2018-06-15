@@ -4,19 +4,24 @@ const User = require('./User');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    User.find()
-        .then(users => {
-            res.status(200).json(users)
-        })
-        .catch(err => {
-            res.status(500).json(err);
-        })
-})
+// router.get('/', (req, res) => {
+//     User.find()
+//         .then(users => {
+//             res.status(200).json(users)
+//         })
+//         .catch(err => {
+//             res.status(500).json(err);
+//         })
+// })
+
+const requirements= { error: "Enter a username and password"};
 
 router.post('/register', (req, res) => {
     const newUser = req.body;
-    // const { username, password } = req.body;
+    if (!req.body.username || !req.body.password) {
+        res.status(400).json(requirements)
+    }
+
     const user = new User(newUser);
     user.save()
         .then(user => {
@@ -29,7 +34,7 @@ router.post('/register', (req, res) => {
 
 router.put('/login', (req, res) => {
     if (!req.body.username || !req.body.password) {
-        res.status(400).json({ "error": "Enter your username and password" })
+        res.status(400).json(requirements)
     }
 
     const { username, password } = req.body;
@@ -65,8 +70,5 @@ router.get('/users', (req, res) => {
             res.status(500).json({ err });
         })
 })
-
-
-
 
 module.exports = router;
