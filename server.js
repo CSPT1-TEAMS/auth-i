@@ -5,12 +5,14 @@ const session = require('express-session');
 
 const server = express();
 
-const db = require('./data/db');
+mongoose.connect('mongodb://localhost:27017/AuthDemo')
+    .then(mongo => {
+        console.log('Connected')
+    })
+    .catch(err => {
+        console.log(err)
+    })
 const userRoutes = require('./user/userRoutes');
-
-db.connectTo('AuthDemo')
-    .then(() => console.log('running'))
-    .catch(err => console.log(err));
 
 server.use(helmet());
 server.use(express.json())
@@ -22,15 +24,6 @@ server.use(session({
 }))
 
 server.use('/api', userRoutes)
-
-server.get('/api/protectedRoute', (req, res) => {
-    const { session } = req;
-    if (session.isLoggedIn) {
-        res.status(200).json({ msg: "Authorized" })
-    } else {
-        res.status(401).json({ msg: "UNAUTHORIZED" })
-    }
-})
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {

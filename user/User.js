@@ -17,14 +17,14 @@ User.pre('save', function (next) {
     })
 })
 
-User.methods.comparePasswords = function(plainText, cb) {
+User.methods.comparePasswords = function (plainText, cb) {
     bcrypt.compare(plainText, this.password)
-       .then( isMatch => {
-           cb(isMatch)
-       })
-       .catch(err => {
-           console.log(err)
-       })
+        .then(isMatch => {
+            cb(isMatch)
+        })
+        .catch(err => {
+            console.log(err)
+        })
 }
 
 module.exports = mongoose.model('User', User);

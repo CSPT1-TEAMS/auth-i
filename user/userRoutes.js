@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 
 router.post('/register', (req, res) => {
     const newUser = req.body;
-    const { username, password } = req.body;
+    // const { username, password } = req.body;
     const user = new User(newUser);
     user.save()
         .then(user => {
@@ -29,23 +29,40 @@ router.post('/register', (req, res) => {
 
 router.put('/login', (req, res) => {
     if (!req.body.username || !req.body.password) {
-        res.status(400).json({"error": "Enter your username and password"})
+        res.status(400).json({ "error": "Enter your username and password" })
     }
-    // console.log(req.session)
+
     const { username, password } = req.body;
     User.findOne({ username })
         .then(user => {
             req.session.isLoggedIn = true;
             user.comparePasswords(password, isMatch => {
                 if (isMatch) {
-                    res.status(200).json({ "message": "Logged in" })
+                    res.status(200).json({ msg: "Logged in" })
                 } else {
-                    res.status(401).json({"error": "Incorrect password"})
+                    res.status(401).json({ error: "You shall not pass" })
                 }
             })
         })
         .catch(err => {
             res.status(500).json({ err })
+        })
+})
+
+router.get('/users', (req, res) => {
+    const { session } = req;
+
+    User.find()
+        .select('username -_id')
+        .then(users => {
+            if (session.isLoggedIn) {
+                res.status(200).json({ users })
+            } else {
+                res.status(401).json({ msg: "You shall not pass!" })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ err });
         })
 })
 
