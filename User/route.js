@@ -1,6 +1,7 @@
 const express = require('express');
-const router = express.Router();
 const User = require('./model.js');
+
+const router = express.Router();
 
 router.route("/register")
   .post((req, res) => {
@@ -13,10 +14,25 @@ router.route("/register")
         res.status(500).send(err);
       })
   })
-// router.route("/login")
-//   .post((req, res) => {
 
-//   })
+router.route("/login")
+  .post((req, res) => {
+    const { username, password } = req.body;
+    User.findOne({username})
+      .then(user => {
+        user.verifyPassword(password, isMatch => {
+          if (isMatch) {
+            req.session.username = username;
+            res.status(200).json({msg: "Logged in"})
+          }
+          else res.status(401).json({msg: "You shall not pass!"})
+        })
+      })
+      .catch(err => {
+        res.status(500).json({msg: "user does not exist", error: err});
+      })
+  })
+
 router.route("/users")
   .get((req, res) => {
     User.find()
