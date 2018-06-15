@@ -3,6 +3,11 @@ const User = require('./model.js');
 
 const router = express.Router();
 
+const requiresAuthorization = (req, res, next) => {
+  if (req.session && req.session.username) next();
+  else res.status(401).json({msg: "You shall not pass!"})
+}
+
 router.route("/register")
   .post((req, res) => {
     const user = new User(req.body)
@@ -34,7 +39,7 @@ router.route("/login")
   })
 
 router.route("/users")
-  .get((req, res) => {
+  .get(requiresAuthorization, (req, res) => {
     User.find()
       .then(users => {
         res.status(200).json(users);
