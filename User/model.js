@@ -19,4 +19,14 @@ UserSchema.pre('save', function(next){
     return next()
   })
 })
+UserSchema.methods.verifyPassword = function(submittedPass, cb){
+  bcrypt.compare(submittedPass, this.password)
+    .then(verified => {
+      cb(verified)
+    })
+    .catch(err => {
+      console.log(err)
+    })
+}
+
 module.exports = mongoose.model('User', UserSchema, 'users')
