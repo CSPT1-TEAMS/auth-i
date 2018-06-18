@@ -5,6 +5,8 @@
   "dependencies": {
     "ajax": "^0.0.4",
     "axios": "^0.18.0",
+    "babel": "^6.23.0",
+    "prop-types": "^15.6.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4"
